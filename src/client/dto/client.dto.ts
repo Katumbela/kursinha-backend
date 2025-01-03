@@ -1,0 +1,54 @@
+/* eslint-disable prettier/prettier */
+// src/client/dto/create-client.dto.ts
+import { PartialType } from '@nestjs/mapped-types';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+
+export class CreateClientDto {
+    @IsNotEmpty()
+    @IsString()
+    id: string;
+
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsString()
+    bi: string;
+
+    @IsNotEmpty()
+    @IsString()
+    phone: string;
+
+    @IsNotEmpty()
+    @IsString()
+    city: string;
+
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    @IsString()
+    password: string;
+
+    @IsOptional()
+    verified?: boolean;
+
+    @IsOptional()
+    @IsString()
+    type?: string;
+}
+
+export class AuthDTO {
+    @IsEmail()
+    email: string;
+
+    @IsString()
+    password: string;
+}
+
+export class UpdateClientDto extends PartialType(CreateClientDto) {
+    bi: string;
+}
