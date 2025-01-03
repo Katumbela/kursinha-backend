@@ -8,6 +8,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { env } from './config/env';
 import { AuthModule } from './auth/auth.module'; // Importando o AuthModule
+import { CompanyModule } from './company/company.module';
+import { ComplaintModule } from './complaint/complaint.module';
 
 @Module({
   imports: [
@@ -32,7 +34,9 @@ import { AuthModule } from './auth/auth.module'; // Importando o AuthModule
       },
     }),
     ClientModule,
-    AuthModule, 
+    AuthModule,
+    ComplaintModule,
+    CompanyModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

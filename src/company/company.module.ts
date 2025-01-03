@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 // src/client/client.module.ts
 import { Module } from '@nestjs/common';
-import { ClientService } from './client.service';
-import { ClientController } from './client.controller';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/utils/email-sender.services';
+import { CompanyController } from './company.controller';
+import { CompanyService } from './company.service';
 
 @Module({
-    controllers: [ClientController],
-    providers: [ClientService, PrismaService, JwtService, EmailService],
+    controllers: [CompanyController],
+    providers: [CompanyService, PrismaService, JwtService, EmailService],
 })
-export class ClientModule { }
+export class CompanyModule { }

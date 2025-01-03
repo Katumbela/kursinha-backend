@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 const frontBaseUrl = 'http://localhost:3000',
-    MAIL_FROM = "info@reputacao360.online",
+    MAIL_FROM = "geral@reputacao360.online",
     MAIL_MAILER = "smtp",
     MAIL_HOST = "smtp.gmail.com",
     MAIL_PORT = "465",

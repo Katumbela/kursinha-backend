@@ -49,6 +49,39 @@ export class AuthDTO {
     password: string;
 }
 
+
+export class RequestPasswordResetDto {
+
+    @IsEmail()
+    email: string;
+}
+
+export class ResetPasswordDto {
+
+    @IsString()
+    token: string;
+
+
+    @IsString()
+    newPassword: string;
+}
+
+export class ChangePasswordDto {
+
+
+    @IsString()
+    currentPassword: string;
+
+
+    @IsString()
+    token?: string;
+
+
+    @IsString()
+    newPassword: string;
+}
+
+
 export class UpdateClientDto extends PartialType(CreateClientDto) {
     bi: string;
 }

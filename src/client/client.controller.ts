@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 // src/client/client.controller.ts
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ClientService } from './client.service';
-import { AuthDTO, CreateClientDto, UpdateClientDto } from './dto/client.dto';
+import { AuthDTO, ChangePasswordDto, CreateClientDto, RequestPasswordResetDto, ResetPasswordDto, UpdateClientDto } from './dto/client.dto';
 
 @Controller('api/clients')
 export class ClientController {
@@ -37,4 +37,36 @@ export class ClientController {
     delete(@Param('id') id: string) {
         return this.clientService.delete({ id });
     }
+
+
+    @Post('/password-reset-request')
+    async requestPasswordReset(@Body() requestPasswordResetDto: RequestPasswordResetDto) {
+
+        return await this.clientService.requestPasswordReset(requestPasswordResetDto.email);
+    }
+
+    @Post('/password-reset-confirm')
+    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+        return await this.clientService.resetPassword(resetPasswordDto.token, resetPasswordDto.newPassword);
+    }
+
+    @Patch('/change-password/:id')
+    async changePassword(@Param('id') id: string, @Body() changePasswordDto: ChangePasswordDto) {
+        console.log(changePasswordDto);
+        console.log(id);
+        return await this.clientService.changePassword(id, changePasswordDto);
+    }
+
+
+    @Get('/validate-reset-token/:token')
+    async validateResetToken(@Param('token') token: string) {
+        const isValid = await this.clientService.validateResetToken(token);
+        if (isValid) {
+            return { message: 'Token válido' };
+        } else {
+            throw new BadRequestException('Token inválido ou expirado');
+        }
+    }
+
+
 }
