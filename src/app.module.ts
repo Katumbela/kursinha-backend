@@ -10,6 +10,7 @@ import { env } from './config/env';
 import { AuthModule } from './auth/auth.module'; // Importando o AuthModule
 import { CompanyModule } from './company/company.module';
 import { ComplaintModule } from './complaint/complaint.module';
+import { DiscountModule } from './discounts/discount.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { ComplaintModule } from './complaint/complaint.module';
     ClientModule,
     AuthModule,
     ComplaintModule,
-    CompanyModule
+    CompanyModule,
+    DiscountModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
