@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-// src/client/entities/client.entity.ts
+/* eslint-disable prettier/prettier */ 
 
 export class ClientEntity {
     id?: string;
