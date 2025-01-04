@@ -11,7 +11,7 @@ import { EmailService } from 'src/utils/email-sender.services';
     imports: [
 
         JwtModule.register({
-            secret: 'reputacao3602024',
+            secret: 'kursinha@2024',
             signOptions: { expiresIn: '60m' },
         }),
         forwardRef(() => ClientModule)
