@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// src/client/client.controller.ts
+
 import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { AuthDTO, ChangePasswordDto, CreateClientDto, RequestPasswordResetDto, ResetPasswordDto, UpdateClientDto } from './dto/client.dto';
