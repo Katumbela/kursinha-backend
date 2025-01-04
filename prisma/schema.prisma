@@ -7,106 +7,16 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model Empresa {
-    id              String        @id @default(auto()) @map("_id") @db.ObjectId
-    nomeEmpresa     String
-    emailEmpresa    String        @unique
-    numeroBI        String?
-    siteEmpresa     String?
-    whatsapp        String?
-    enderecoEmpresa String?
-    sobre           String?
-    nomeResponsavel String?
-    senha           String
-    conta           String        @default("empresa")
-    tipo            String?       @default("empresa")
-    insta           String?
-    youtube         String?
-    fb              String?
-    selo            Boolean       @default(false)
-    userId          String?
-    logo            String?
-    capa            String?
-    quando          String?
-    timestamp       DateTime      @default(now())
-    slug            String        @unique
-    reclamacoes     Reclamacao[]
-    respostas       Resposta[]
-    ProfileView     ProfileView[]
-    Discount        Discount[]
-    categoria       String?
-}
-
-model Reclamacao {
-    id                 String     @id @default(auto()) @map("_id") @db.ObjectId
-    anexos             String[]
-    empresaId          String     @db.ObjectId
-    nomeEmpresa        String
-    cliente            String
-    emailCliente       String
-    status             String
-    photo              String?
-    classificacao      Int
-    historia           String
-    mostrarNome        Boolean?
-    quando             String
-    titulo             String
-    solicitarNovamente String
-    timestamp          DateTime?  @default(now())
-    respostas          Resposta[]
-    Empresa            Empresa    @relation(fields: [empresaId], references: [id])
-}
-
-model Resposta {
-    id           String     @id @default(auto()) @map("_id") @db.ObjectId
-    reclamacaoId String     @db.ObjectId
-    reclamacao   Reclamacao @relation(fields: [reclamacaoId], references: [id])
-    resposta     String
-    timestamp    DateTime   @default(now())
-    companyId    String     @db.ObjectId
-    empresa      Empresa    @relation(fields: [companyId], references: [id])
-}
-
 model Client {
     id         String    @id @default(auto()) @map("_id") @db.ObjectId
-    name       String
-    bi         String?
-    uid        String?   @unique
-    phone      String
-    city       String?
-    email      String    @unique
+    name       String 
+    phone      String?
     address    String?
-    pictureUrl String?
+    email      String    @unique
+    country    String?
+    photo      String?
     password   String
-    timestamp  DateTime? @default(now())
-    verified   Boolean   @default(false)
-    type       String    @default("client")
-}
-
-model Verificacao {
-    id           String   @id @default(auto()) @map("_id") @db.ObjectId
-    document_url String
-    phone_number String
-    company_id   String
-    company_name String
-    verified_at  DateTime
-}
-
-model ProfileView {
-    id        String  @id @default(auto()) @map("_id") @db.ObjectId
-    companyId String  @unique @db.ObjectId
-    views     Int     @default(0)
-    Empresa   Empresa @relation(fields: [companyId], references: [id])
-}
-
-model Discount {
-    id             String   @id @default(auto()) @map("_id") @db.ObjectId
-    title          String?
-    description    String?
-    code           String   @unique
-    percentage     Float
-    expirationDate DateTime
-    companyId      String   @db.ObjectId
-    timestamp      DateTime @default(now())
-    Empresa        Empresa  @relation(fields: [companyId], references: [id])
+    created_at DateTime? @default(now())
+    updated_at DateTime  @default(now())
+    role       String    @default("client")
 }
