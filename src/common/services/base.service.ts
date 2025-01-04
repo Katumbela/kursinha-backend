@@ -23,8 +23,6 @@ export class BaseService<T> {
 
     async findOne(where: Partial<T>, params?: any): Promise<T | null> {
 
-        // console.log(this.modelName)
-
         return this.prismaService[this.modelName].findUnique({
             where,
             include: params?.include,
