@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// src/client/client.module.ts
+
 import { Module } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientController } from './client.controller';
