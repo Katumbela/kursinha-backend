@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// src/common/services/base.service.ts 
+
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 
