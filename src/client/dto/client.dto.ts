@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// src/client/dto/create-client.dto.ts
+
 import { PartialType } from '@nestjs/mapped-types';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
