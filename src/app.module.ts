@@ -7,10 +7,7 @@ import { PrismaService } from './common/services/prisma.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { env } from './config/env';
-import { AuthModule } from './auth/auth.module'; // Importando o AuthModule
-import { CompanyModule } from './company/company.module';
-import { ComplaintModule } from './complaint/complaint.module';
-import { DiscountModule } from './discounts/discount.module';
+import { AuthModule } from './auth/auth.module'; // Importando o AuthModule 
 
 @Module({
   imports: [
@@ -36,9 +33,6 @@ import { DiscountModule } from './discounts/discount.module';
     }),
     ClientModule,
     AuthModule,
-    ComplaintModule,
-    CompanyModule,
-    DiscountModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
