@@ -11,6 +11,14 @@ services:
     networks:
       - app-network
     command: [ "mongod", "--replSet", "rs0", "--bind_ip", "0.0.0.0" ]
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"       # Limita a CPU a 2 núcleos
+          memory: "1G"      # Limita a memória a 1GB
+        reservations:
+          cpus: "1.0"       # Garante ao menos 1 núcleo de CPU
+          memory: "512M"    # Garante ao menos 512MB de memória
 
 volumes:
   mongodb_data:
