@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { EventService } from './event.service';
-import { EventTicket } from '@prisma/client';
 import { CreateEventTicketDto } from './dto/event.ticket.dto';
 
-@Controller('event')
+@Controller('api/event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 

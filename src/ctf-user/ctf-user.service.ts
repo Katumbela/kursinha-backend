@@ -22,7 +22,7 @@ export class CtfUserService extends BaseService<CTFUserEntity> {
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
   ) {
-    super(prisma, 'ctfuser');
+    super(prisma, 'ctfUser');
   }
 
   async authenticate(
