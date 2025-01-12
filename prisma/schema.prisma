@@ -16,6 +16,7 @@ model Student {
   country    String?
   photo      String?
   password   String
+  slug       String    @unique
   created_at DateTime? @default(now())
   updated_at DateTime  @default(now())
   role       String    @default("client")
@@ -27,6 +28,7 @@ model EventTicket {
   name       String?
   email      String?
   phone      String?
+  quantity   Int?
   method     PaymentMethod?
   status     EventTicketStatus
   created_at DateTime?         @default(now())
@@ -66,4 +68,15 @@ model Conversation {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   messages  Message[]
   createdAt DateTime  @default(now())
+}
+
+model CTFUser {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  username   String
+  email      String
+  password   String
+  players    String?  @default("1")
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  type       String   @default("ctf-player")
 }

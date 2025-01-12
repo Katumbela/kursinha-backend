@@ -2,12 +2,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientModule } from './client/client.module';
+import { StudentModule } from './client/student.module';
 import { PrismaService } from './common/services/prisma.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { env } from './config/env';
-import { AuthModule } from './auth/auth.module'; // Importando o AuthModule 
+import { AuthModule } from './auth/auth.module';
+import { CtfUserModule } from './ctf-user/ctf-user.module';
+import { EventModule } from './event/event.module';
+import { CommunicationModule } from './communication/communication.module';
+import { StudentService } from './client/student.service';
 
 @Module({
   imports: [
@@ -31,11 +35,14 @@ import { AuthModule } from './auth/auth.module'; // Importando o AuthModule
         },
       },
     }),
-    ClientModule,
+    StudentModule,
     AuthModule,
+    CtfUserModule,
+    EventModule,
+    CommunicationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
   exports: [PrismaService],
 })
-export class AppModule { }
+export class AppModule {}
