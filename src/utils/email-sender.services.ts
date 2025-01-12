@@ -6,7 +6,7 @@ import { env } from 'src/config/env';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerService: MailerService) { }
+  constructor(private readonly mailerService: MailerService) {}
 
   async sendPasswordResetEmail(email: string, token: string) {
     const resetUrl = `${env.frontBaseUrl}/password-reset/confirm?token=${token}`;
@@ -21,7 +21,11 @@ export class EmailService {
     });
   }
 
-  async sendAdminInviteEmail(email: string, adminName: string, adminEmail: string) {
+  async sendAdminInviteEmail(
+    email: string,
+    adminName: string,
+    adminEmail: string,
+  ) {
     const inviteUrl = `${env.frontBaseUrl}/admin-dashboard`;
 
     await this.mailerService.sendMail({

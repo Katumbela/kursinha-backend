@@ -1,10 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { env } from '../config/env';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
@@ -15,7 +21,9 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+      const payload = this.jwtService.verify(token, {
+        secret: env.JWT_SECRET,
+      });
       request.user = payload;
       return true;
     } catch (err: any) {

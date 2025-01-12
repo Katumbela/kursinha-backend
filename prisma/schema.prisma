@@ -1,22 +1,69 @@
 datasource db {
-    provider = "mongodb"
-    url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
-model Client {
-    id         String    @id @default(auto()) @map("_id") @db.ObjectId
-    name       String 
-    phone      String?
-    address    String?
-    email      String    @unique
-    country    String?
-    photo      String?
-    password   String
-    created_at DateTime? @default(now())
-    updated_at DateTime  @default(now())
-    role       String    @default("client")
+model Student {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  phone      String?
+  address    String?
+  email      String    @unique
+  country    String?
+  photo      String?
+  password   String
+  created_at DateTime? @default(now())
+  updated_at DateTime  @default(now())
+  role       String    @default("client")
+  Ticket     Ticket[]
+}
+
+model EventTicket {
+  id         String            @id @default(auto()) @map("_id") @db.ObjectId
+  name       String?
+  email      String?
+  phone      String?
+  method     PaymentMethod?
+  status     EventTicketStatus
+  created_at DateTime?         @default(now())
+  updated_at DateTime?         @default(now())
+}
+
+enum EventTicketStatus {
+  Pending
+  Paid
+}
+
+enum PaymentMethod {
+  PayPal
+  Manual
+}
+
+model Ticket {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  subject   String
+  message   String
+  userId    String   @db.ObjectId
+  user      Student  @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  senderId       String
+  receiverId     String
+  message        String
+  createdAt      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model Conversation {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  messages  Message[]
+  createdAt DateTime  @default(now())
 }
