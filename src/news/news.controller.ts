@@ -40,12 +40,12 @@ export class NewsController {
     @Put(':id')
     @ApiOperation({ summary: 'Atualizar uma notícia' })
     update(@Param('id') id: number, @Body() data: UpdateNewsDto) {
-        return this.newsService.update({ id }, data);
+        return this.newsService.update({ id: Number(id) }, data);
     }
 
     @Delete(':id')
     @ApiOperation({ summary: 'Deletar uma notícia' })
     delete(@Param('id') id: number) {
-        return this.newsService.delete({ id });
+        return this.newsService.delete({ id: Number(id) });
     }
 }
