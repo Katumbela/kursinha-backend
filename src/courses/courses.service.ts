@@ -61,14 +61,14 @@ export class CourseService {
                 },
                 years: {
                     create: createCourseDto.years.map((year) => ({
-                        year: year.year,
+                        year: Number(year.year),
                         semesters: {
                             create: year.semesters.map((semester) => ({
-                                semester: semester.semester,
+                                semester: Number(semester.semester),
                                 subjects: {
                                     create: semester.subjects.map((subject) => ({
                                         name: subject.name,
-                                        workload: subject.workload,
+                                        workload: Number(subject.workload),
                                     })),
                                 },
                             })),
