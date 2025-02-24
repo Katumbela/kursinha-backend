@@ -16,6 +16,7 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
                 name: dto.name,
                 catalog_link: dto.catalog_link,
                 slug: dto.slug,
+                description: dto.description,
                 department_cover: dto.department_cover,
                 departmentDirector: {
                     create: {
