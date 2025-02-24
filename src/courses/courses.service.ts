@@ -7,21 +7,13 @@ import { CreateCourseDto, UpdateCourseDto } from './dto/course.dto';
 export class CourseService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async findAll(id?: number, slug?: string) {
-        if (id) {
-            return this.findById(id);
-        }
-
-        if (slug) {
-            return this.findBySlug(slug);
-        }
-
+    async findAll() {
         return this.prisma.course.findMany();
     }
 
     async findById(id: number) {
         const course = await this.prisma.course.findUnique({
-            where: { id },
+            where: { id: Number(id) },
             include: {
                 department: true,
                 years: { include: { semesters: { include: { subjects: true } } } },

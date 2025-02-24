@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Put, Delete, Param, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 
 import { CreateCourseDto, UpdateCourseDto } from './dto/course.dto';
 import { CourseService } from './courses.service';
@@ -9,16 +9,18 @@ export class CourseController {
     constructor(private readonly courseService: CourseService) { }
 
     @Get()
-    async findAll(@Query('id') id?: string, @Query('slug') slug?: string) {
-        if (id) {
-            return this.courseService.findById(Number(id));
-        }
-
-        if (slug) {
-            return this.courseService.findBySlug(slug);
-        }
-
+    async findAll() {
         return this.courseService.findAll();
+    }
+
+    @Get(':id')
+    async findById(@Param('id') id: string) {
+        return this.courseService.findById(Number(id));
+    }
+
+    @Get('slug/:slug')
+    async findBySlug(@Param('slug') slug: string) {
+        return this.courseService.findBySlug(slug);
     }
 
     @Post()
