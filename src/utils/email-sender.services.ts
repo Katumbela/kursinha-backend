@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { env } from 'src/config/env';
+import { env } from '../config/env';
 
 @Injectable()
 export class EmailService {

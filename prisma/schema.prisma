@@ -1,82 +1,150 @@
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
-model Student {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  phone      String?
-  address    String?
-  email      String    @unique
-  country    String?
-  photo      String?
-  password   String
-  slug       String    @unique
-  created_at DateTime? @default(now())
-  updated_at DateTime  @default(now())
-  role       String    @default("client")
-  Ticket     Ticket[]
+datasource db {
+    provider          = "mysql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model EventTicket {
-  id         String            @id @default(auto()) @map("_id") @db.ObjectId
-  name       String?
-  email      String?
-  phone      String?
-  quantity   Int?
-  method     PaymentMethod?
-  status     EventTicketStatus
-  created_at DateTime?         @default(now())
-  updated_at DateTime?         @default(now())
+model News {
+    id               Int      @id @default(autoincrement())
+    title            String
+    shortDescription String
+    content          String   @db.LongText // Permite textos longos
+    postDate         DateTime
+    poster           String
+    link             String
+    slug             String
+    image            String   @db.LongText
+    sponsor          Boolean?
 }
 
-enum EventTicketStatus {
-  Pending
-  Paid
+model Role {
+    id       Int      @id @default(autoincrement())
+    pic      String
+    name     String
+    about    String   @db.Text // Permite textos médios
+    cv       String   @db.LongText // Pode armazenar currículos extensos
+    role     String
+    linkedin String?
+    x        String?
+    phrases  Phrase[]
+    team     String
 }
 
-enum PaymentMethod {
-  PayPal
-  Manual
+model Phrase {
+    id          Int    @id @default(autoincrement())
+    title       String
+    description String @db.Text // Permite descrições maiores
+    roleId      Int
+    Role        Role   @relation(fields: [roleId], references: [id])
 }
 
-model Ticket {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  subject   String
-  message   String
-  userId    String   @db.ObjectId
-  user      Student  @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+model Event {
+    id              Int      @id @default(autoincrement())
+    title           String
+    description     String
+    longDescription String   @db.LongText // Permite descrições detalhadas
+    date            DateTime
+    category        String
+    imageUrl        String   @db.LongText
+    isFeatured      Boolean
+    slug            String
+    place           String
 }
 
-model Message {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  senderId       String
-  receiverId     String
-  message        String
-  createdAt      DateTime     @default(now())
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+model Course {
+    id               Int        @id @default(autoincrement())
+    course           String
+    short_detail     String?
+    long_description String?    @db.LongText // Permite descrição completa do curso
+    duration         Int
+    level            String
+    slug             String
+    shift            Shift?
+    benefits         String?    @db.Text // Explicação detalhada dos benefícios
+    entryProfile     String?    @db.Text // Explicação do perfil de entrada
+    outProfile       String?    @db.Text // Explicação do perfil de saída
+    years            Year[]
+    course_cover     String     @db.LongText
+    department       Department @relation(fields: [departmentId], references: [id])
+    departmentId     Int
+    createdAt        DateTime   @default(now())
+    updatedAt        DateTime   @updatedAt
 }
 
-model Conversation {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  messages  Message[]
-  createdAt DateTime  @default(now())
+model Department {
+    id                 Int                 @id @default(autoincrement())
+    name               String
+    catalog_link       String?
+    slug               String
+    department_cover   String?             @db.LongText
+    departmentDirector DepartmentDirector?
+    courses            Course[]
+    createdAt          DateTime            @default(now())
+    updatedAt          DateTime            @updatedAt
 }
 
-model CtfUser {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  username   String
-  email      String   @unique
-  password   String
-  players    String?  @default("1")
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  type       String   @default("ctf-player")
+model DepartmentDirector {
+    id           Int        @id @default(autoincrement())
+    name         String
+    picture      String     @db.LongText
+    department   Department @relation(fields: [departmentId], references: [id])
+    departmentId Int        @unique
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+}
+
+model Shift {
+    id        Int      @id @default(autoincrement())
+    morning   Boolean?
+    afternoon Boolean?
+    evening   Boolean?
+    course    Course   @relation(fields: [courseId], references: [id])
+    courseId  Int      @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Year {
+    id        Int        @id @default(autoincrement())
+    year      Int
+    semesters Semester[]
+    course    Course     @relation(fields: [courseId], references: [id])
+    courseId  Int
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+}
+
+model Semester {
+    id        Int       @id @default(autoincrement())
+    semester  Int
+    subjects  Subject[]
+    year      Year      @relation(fields: [yearId], references: [id])
+    yearId    Int
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+}
+
+model Subject {
+    id         Int      @id @default(autoincrement())
+    name       String
+    workload   Int
+    semester   Semester @relation(fields: [semesterId], references: [id])
+    semesterId Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model Application {
+    id        Int      @id @default(autoincrement())
+    name      String
+    email     String
+    phone     String
+    birthDate String?
+    course    String?
+    interest  String?
+    date      DateTime @default(now())
 }

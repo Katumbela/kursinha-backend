@@ -8,10 +8,12 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { env } from './config/env';
 import { AuthModule } from './auth/auth.module';
-import { CtfUserModule } from './ctf-user/ctf-user.module';
+import { ApplicationModule } from './application/application.module';
+import { CourseModule } from './courses/courses.module';
+import { DepartmentModule } from './departments/department.module';
 import { EventModule } from './event/event.module';
-import { CommunicationModule } from './communication/communication.module';
-import { StudentService } from './client/student.service';
+import { NewsModule } from './news/news.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -37,12 +39,15 @@ import { StudentService } from './client/student.service';
     }),
     StudentModule,
     AuthModule,
-    CtfUserModule,
+    ApplicationModule,
+    CourseModule,
+    DepartmentModule,
+    RoleModule,
+    NewsModule,
     EventModule,
-    CommunicationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
   exports: [PrismaService],
 })
-export class AppModule {}
+export class AppModule { }

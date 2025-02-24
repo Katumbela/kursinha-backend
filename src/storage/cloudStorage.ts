@@ -6,7 +6,7 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import { promisify } from 'util';
-import { storage } from "src/config/firebaseConfig";
+import { storage } from "../config/firebaseConfig";
 
 
 export async function uploadToCloud(

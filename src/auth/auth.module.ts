@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { StudentService } from 'src/client/student.service';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { StudentService } from '../client/student.service';
+import { PrismaService } from '../common/services/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
-import { StudentModule } from 'src/client/student.module';
-import { EmailService } from 'src/utils/email-sender.services';
+import { StudentModule } from '../client/student.module';
+import { EmailService } from '../utils/email-sender.services';
 
 @Module({
   imports: [
@@ -24,4 +24,4 @@ import { EmailService } from 'src/utils/email-sender.services';
   ],
   exports: [StudentService],
 })
-export class AuthModule {}
+export class AuthModule { }

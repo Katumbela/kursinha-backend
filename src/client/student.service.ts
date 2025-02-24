@@ -10,9 +10,9 @@ import { BaseService } from '../common/services/base.service';
 import { StudentEntity } from './entity/student.entity';
 import { JwtService } from '@nestjs/jwt';
 import { AuthDTO, ChangePasswordDto } from './dto/student.dto';
-import { EmailService } from 'src/utils/email-sender.services';
+import { EmailService } from '../utils/email-sender.services';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from '../common/services/prisma.service';
 
 @Injectable()
 export class StudentService extends BaseService<StudentEntity> {

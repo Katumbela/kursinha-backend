@@ -1,23 +1,42 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
 import { EventService } from './event.service';
-import { CreateEventTicketDto } from './dto/event.ticket.dto';
+import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
 
-@Controller('api/event')
+@Controller('api/events')
 export class EventController {
-  constructor(private readonly eventService: EventService) {}
+    constructor(private readonly eventService: EventService) { }
 
-  @Get()
-  getAllEvents() {
-    return this.eventService.findAll();
-  }
+    @Get()
+    findAll(@Query('slug') slug?: string) {
+        if (slug) {
+            return this.eventService.findBySlug(slug);
+        }
+        return this.eventService.findAll();
+    }
 
-  @Get('/:id')
-  getEventById(@Param('id') id: string) {
-    return this.eventService.findOne({ id });
-  }
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        const event = await this.eventService.findOne({ id: Number(id) });;
+        if (!event) {
+            throw new NotFoundException('Evento não encontrado!');
+        }
+        return event;
+    }
 
-  @Post()
-  createEvent(@Body() eventTicketData: CreateEventTicketDto) {
-    return this.eventService.create(eventTicketData);
-  }
+    @Post()
+    create(@Body() createEventDto: CreateEventDto) {
+        return this.eventService.create(createEventDto);
+    }
+
+    @Put(':id')
+    update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+        return this.eventService.update({ id: Number(id) }, updateEventDto);
+    }
+
+    @Delete(':id')
+    delete(@Param('id') id: string) {
+        return this.eventService.delete({ id: Number(id) });
+    }
 }
