@@ -51,7 +51,7 @@ export class CourseService {
             data: {
                 ...courseData,
                 benefits: courseData.benefits, // Add empty array as default value
-                department: { connect: { id: departmentId } },
+                department: { connect: { id: Number(departmentId) } },
                 shift: {
                     create: {
                         afternoon: createCourseDto.shift.afternoon,
@@ -81,7 +81,7 @@ export class CourseService {
 
     async update(id: number, updateCourseDto: UpdateCourseDto) {
         return this.prisma.course.update({
-            where: { id },
+            where: { id: Number(id) },
             data: updateCourseDto,
             include: {
                 department: true,
@@ -92,6 +92,6 @@ export class CourseService {
     }
 
     async remove(id: number) {
-        return this.prisma.course.delete({ where: { id } });
+        return this.prisma.course.delete({ where: { id: Number(id) } });
     }
 }
