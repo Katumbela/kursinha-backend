@@ -33,6 +33,11 @@ export class DepartmentController {
         return this.departmentService.findFirst({ courseId: Number(courseId) }, { include: { departmentDirector: true, courses: true } });
     }
 
+    @Get(':id/courses')
+    async findCoursesByDepartmentId(@Param('id') id: number) {
+        return this.departmentService.findCoursesByDepartmentId(id);
+    }
+
     @Put(':id')
     async update(@Param('id') id: number, @Body() updateDepartmentDto: UpdateDepartmentDto) {
         return this.departmentService.updateDep(id, updateDepartmentDto);
