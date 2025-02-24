@@ -20,7 +20,7 @@ export class DepartmentController {
 
     @Get(':id')
     async findById(@Param('id') id: number) {
-        return this.departmentService.findOne({ id }, { include: { departmentDirector: true, courses: true } });
+        return this.departmentService.findOne({ id: Number(id) }, { include: { departmentDirector: true, courses: true } });
     }
 
     @Get('slug/:slug')
@@ -30,7 +30,7 @@ export class DepartmentController {
 
     @Get('course-id/:courseId')
     async findByCourseId(@Param('courseId') courseId: number) {
-        return this.departmentService.findFirst({ courseId: courseId }, { include: { departmentDirector: true, courses: true } });
+        return this.departmentService.findFirst({ courseId: Number(courseId) }, { include: { departmentDirector: true, courses: true } });
     }
 
     @Put(':id')
