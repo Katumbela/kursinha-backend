@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Put, Delete, Body, Query, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { CreateDepartmentDto, UpdateDepartmentDto } from './dto/department.dto';
 import { DepartmentService } from './department.service';
 
@@ -14,11 +14,23 @@ export class DepartmentController {
     }
 
     @Get()
-    async findAll(@Query('id') id?: number, @Query('slug') slug?: string, @Query('courseId') courseId?: number) {
-        if (id) return this.departmentService.findOne({ id }, { include: { departmentDirector: true, courses: true }, });
-        if (slug) return this.departmentService.findFirst({ slug: slug }, { include: { departmentDirector: true, courses: true }, });
-        if (courseId) return this.departmentService.findFirst({ courseId: courseId }, { include: { departmentDirector: true, courses: true }, });
+    async findAll() {
         return this.departmentService.findAll();
+    }
+
+    @Get(':id')
+    async findById(@Param('id') id: number) {
+        return this.departmentService.findOne({ id }, { include: { departmentDirector: true, courses: true } });
+    }
+
+    @Get('slug/:slug')
+    async findBySlug(@Param('slug') slug: string) {
+        return this.departmentService.findFirst({ slug: slug }, { include: { departmentDirector: true, courses: true } });
+    }
+
+    @Get('course-id/:courseId')
+    async findByCourseId(@Param('courseId') courseId: number) {
+        return this.departmentService.findFirst({ courseId: courseId }, { include: { departmentDirector: true, courses: true } });
     }
 
     @Put(':id')
