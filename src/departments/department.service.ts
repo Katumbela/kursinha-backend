@@ -47,4 +47,10 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
             include: { departmentDirector: true, courses: true },
         });
     }
+
+    async findCoursesByDepartmentId(departmentId: number) {
+        return this.prisma.course.findMany({
+            where: { departmentId },
+        });
+    }
 }
