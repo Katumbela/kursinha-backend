@@ -81,6 +81,7 @@ model Department {
     catalog_link       String?
     slug               String
     department_cover   String?             @db.LongText
+    description        String?             @db.LongText
     departmentDirector DepartmentDirector?
     courses            Course[]
     createdAt          DateTime            @default(now())

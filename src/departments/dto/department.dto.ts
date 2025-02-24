@@ -27,6 +27,11 @@ export class CreateDepartmentDto {
     @IsUrl()
     catalog_link?: string;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUrl()
+    description?: string;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
