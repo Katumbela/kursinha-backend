@@ -31,7 +31,7 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
 
     async updateDep(id: number, dto: UpdateDepartmentDto) {
         return this.prisma.department.update({
-            where: { id },
+            where: { id: Number(id) },
             data: {
                 name: dto.name,
                 catalog_link: dto.catalog_link,
@@ -50,7 +50,7 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
 
     async findCoursesByDepartmentId(departmentId: number) {
         return this.prisma.course.findMany({
-            where: { departmentId },
+            where: { departmentId: Number(departmentId) },
         });
     }
 }
