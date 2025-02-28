@@ -15,17 +15,35 @@ export class DepartmentController {
 
     @Get()
     async findAll() {
-        return this.departmentService.findAll();
+        return this.departmentService.findAll({
+            include: {
+                departmentDirector: true, courses: {
+                    include: { shift: true, years: true }
+                }
+            }
+        });
     }
 
     @Get(':id')
     async findById(@Param('id') id: number) {
-        return this.departmentService.findOne({ id: Number(id) }, { include: { departmentDirector: true, courses: true } });
+        return this.departmentService.findOne({ id: Number(id) }, {
+            include: {
+                departmentDirector: true, courses: {
+                    include: { shift: true, years: true }
+                }
+            }
+        });
     }
 
     @Get('slug/:slug')
     async findBySlug(@Param('slug') slug: string) {
-        return this.departmentService.findFirst({ slug: slug }, { include: { departmentDirector: true, courses: true } });
+        return this.departmentService.findFirst({ slug: slug }, {
+            include: {
+                departmentDirector: true, courses: {
+                    include: { shift: true, years: true }
+                }
+            }
+        });
     }
 
     @Get('course-id/:courseId')
