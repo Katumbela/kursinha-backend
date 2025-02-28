@@ -26,12 +26,12 @@ model Role {
     pic      String
     name     String
     about    String   @db.Text // Permite textos médios
-    cv       String   @db.LongText // Pode armazenar currículos extensos
+    cv       String?  @db.LongText // Pode armazenar currículos extensos
     role     String
     linkedin String?
     x        String?
     phrases  Phrase[]
-    team     String
+    team     String?
 }
 
 model Phrase {
