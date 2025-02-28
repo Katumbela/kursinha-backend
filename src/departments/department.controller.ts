@@ -45,6 +45,6 @@ export class DepartmentController {
 
     @Delete(':id')
     async remove(@Param('id') id: number) {
-        return this.departmentService.delete({ id });
+        return this.departmentService.delete({ id: Number(id) });
     }
 }
