@@ -7,6 +7,7 @@ import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 export class RoleService {
     constructor(private readonly prisma: PrismaService) { }
 
+    
     async create(data: CreateRoleDto) {
         return this.prisma.role.create({
             data: {
