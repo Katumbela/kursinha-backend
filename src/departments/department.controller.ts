@@ -18,7 +18,7 @@ export class DepartmentController {
         return this.departmentService.findAll({
             include: {
                 departmentDirector: true, courses: {
-                    include: { shift: true, years: true }
+                    include: { shift: true, years: { include: { semesters: { include: { subjects: true } } } }, }
                 }
             }
         });
@@ -29,7 +29,7 @@ export class DepartmentController {
         return this.departmentService.findOne({ id: Number(id) }, {
             include: {
                 departmentDirector: true, courses: {
-                    include: { shift: true, years: true }
+                    include: { shift: true, years: { include: { semesters: { include: { subjects: true } } } }, }
                 }
             }
         });
@@ -40,7 +40,7 @@ export class DepartmentController {
         return this.departmentService.findFirst({ slug: slug }, {
             include: {
                 departmentDirector: true, courses: {
-                    include: { shift: true, years: true }
+                    include: { shift: true,  years: { include: { semesters: { include: { subjects: true } } } }, }
                 }
             }
         });
