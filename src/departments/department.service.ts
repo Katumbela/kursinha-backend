@@ -55,4 +55,18 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
             where: { departmentId: Number(departmentId) },
         });
     }
+
+    async deleteDepartment(id: number) {
+        return this.prisma.$transaction(async (prisma) => {
+            await prisma.course.deleteMany({
+                where: { departmentId: id },
+            });
+            await prisma.departmentDirector.deleteMany({
+                where: { departmentId: id },
+            });
+            return prisma.department.delete({
+                where: { id },
+            });
+        });
+    }
 }
