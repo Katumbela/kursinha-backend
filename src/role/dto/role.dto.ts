@@ -37,7 +37,7 @@ export class CreateRoleDto {
     @ApiProperty({ example: 'https://image-url.com/johndoe.jpg' })
     @IsString()
     @IsNotEmpty()
-    image: string;
+    pic: string;
 
     @ApiProperty({ example: 'director' })
     @IsString()

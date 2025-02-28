@@ -10,7 +10,7 @@ export class RoleService {
     async create(data: CreateRoleDto) {
         return this.prisma.role.create({
             data: {
-                pic: data.image,
+                pic: data.pic,
                 name: data.name,
                 about: data.about,
                 role: data.role,
@@ -42,7 +42,7 @@ export class RoleService {
         return this.prisma.role.update({
             where: { id },
             data: {
-                pic: data.image,
+                pic: data.pic,
                 name: data.name,
                 about: data.about,
                 role: data.role,
