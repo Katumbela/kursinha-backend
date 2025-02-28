@@ -15,13 +15,7 @@ export class DepartmentController {
 
     @Get()
     async findAll() {
-        return this.departmentService.findAll({
-            include: {
-                departmentDirector: true, courses: {
-                    include: { shift: true, years: { include: { semesters: { include: { subjects: true } } } }, }
-                }
-            }
-        });
+        return this.departmentService.findAllDeps();
     }
 
     @Get(':id')
