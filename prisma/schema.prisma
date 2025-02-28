@@ -69,7 +69,7 @@ model Course {
     outProfile       String?    @db.Text // Explicação do perfil de saída
     years            Year[]
     course_cover     String     @db.LongText
-    department       Department @relation(fields: [departmentId], references: [id])
+    department       Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
     departmentId     Int
     createdAt        DateTime   @default(now())
     updatedAt        DateTime   @updatedAt
@@ -92,7 +92,7 @@ model DepartmentDirector {
     id           Int        @id @default(autoincrement())
     name         String
     picture      String     @db.LongText
-    department   Department @relation(fields: [departmentId], references: [id])
+    department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
     departmentId Int        @unique
     createdAt    DateTime   @default(now())
     updatedAt    DateTime   @updatedAt
@@ -103,7 +103,7 @@ model Shift {
     morning   Boolean?
     afternoon Boolean?
     evening   Boolean?
-    course    Course   @relation(fields: [courseId], references: [id])
+    course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
     courseId  Int      @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -113,7 +113,7 @@ model Year {
     id        Int        @id @default(autoincrement())
     year      Int
     semesters Semester[]
-    course    Course     @relation(fields: [courseId], references: [id])
+    course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
     courseId  Int
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
@@ -123,7 +123,7 @@ model Semester {
     id        Int       @id @default(autoincrement())
     semester  Int
     subjects  Subject[]
-    year      Year      @relation(fields: [yearId], references: [id])
+    year      Year      @relation(fields: [yearId], references: [id], onDelete: Cascade)
     yearId    Int
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
@@ -133,10 +133,10 @@ model Subject {
     id         Int      @id @default(autoincrement())
     name       String
     workload   Int
-    semester   Semester @relation(fields: [semesterId], references: [id])
+    semester   Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
     semesterId Int
     createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    updatedAt  DateTime @default(now())
 }
 
 model Application {
