@@ -58,8 +58,8 @@ export class DepartmentService extends BaseService<UpdateDepartmentDto> {
     }
 
     async findAllDeps() {
-        return this.prisma.course.findMany({
-            include: { department: true, shift: true, years: { include: { semesters: { include: { subjects: true } } } }, },
+        return this.prisma.department.findMany({
+            include: { courses: { include: { shift: true, years: { include: { semesters: { include: { subjects: true } } } }, } } },
         });
     }
 
