@@ -8,7 +8,13 @@ export class CourseService {
     constructor(private readonly prisma: PrismaService) { }
 
     async findAll() {
-        return this.prisma.course.findMany();
+        return this.prisma.course.findMany({
+            include: {
+                department: true,
+                years: { include: { semesters: { include: { subjects: true } } } },
+                shift: true,
+            },
+        });
     }
 
     async findById(id: number) {
