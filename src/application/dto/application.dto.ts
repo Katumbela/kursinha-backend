@@ -20,12 +20,7 @@ export class CreateApplicationDto {
     @IsString()
     @IsNotEmpty()
     phone: string;
-
-    @ApiProperty({ example: '2000-01-01' })
-    @IsDateString()
-    @IsNotEmpty()
-    birthDate: string;
-
+    
     @ApiProperty({ example: 'Computer Science' })
     @IsString()
     @IsNotEmpty()

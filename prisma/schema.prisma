@@ -143,8 +143,7 @@ model Application {
     id        Int      @id @default(autoincrement())
     name      String
     email     String
-    phone     String
-    birthDate String?
+    phone     String 
     course    String?
     interest  String?
     date      DateTime @default(now())

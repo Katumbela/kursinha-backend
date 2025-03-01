@@ -11,5 +11,4 @@ export class ApplicationService extends BaseService<UpdateApplicationDto> {
         super(prisma, 'application');
     }
 
-
 }

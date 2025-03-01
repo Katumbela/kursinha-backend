@@ -17,8 +17,7 @@ export class ApplicationController {
     @ApiResponse({ status: 400, description: 'Dados inválidos' })
     async create(@Body() createApplicationDto: CreateApplicationDto) {
         const data = {
-            ...createApplicationDto,
-            // birthDate: new Date(),
+            ...createApplicationDto, 
             date: new Date(),
         }
         return this.applicationService.create(data);
@@ -35,8 +34,8 @@ export class ApplicationController {
     @ApiOperation({ summary: 'Obter uma inscrição pelo ID' })
     @ApiResponse({ status: 200, description: 'Inscrição obtida com sucesso' })
     @ApiResponse({ status: 404, description: 'Inscrição não encontrada' })
-    async findOne(@Param('id') id: string) {
-        return this.applicationService.findOne({ id });
+    async findOne(@Param('id') id: number) {
+        return this.applicationService.findOne({ id: Number(id) });
     }
 
     @Put(':id')
@@ -44,7 +43,7 @@ export class ApplicationController {
     @ApiResponse({ status: 200, description: 'Inscrição atualizada com sucesso' })
     @ApiResponse({ status: 404, description: 'Inscrição não encontrada' })
     async update(@Param('id') id: string, @Body() updateApplicationDto: CreateApplicationDto) {
-        return this.applicationService.update({ id }, updateApplicationDto);
+        return this.applicationService.update({ id: Number(id) }, updateApplicationDto);
     }
 
     @Delete(':id')
@@ -52,6 +51,6 @@ export class ApplicationController {
     @ApiResponse({ status: 200, description: 'Inscrição removida com sucesso' })
     @ApiResponse({ status: 404, description: 'Inscrição não encontrada' })
     async remove(@Param('id') id: string) {
-        return this.applicationService.delete({ id });
+        return this.applicationService.delete({ id: Number(id) });
     }
 }
