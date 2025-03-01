@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 
-import { IsEmail, IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 
@@ -37,5 +37,5 @@ export class UpdateApplicationDto extends PartialType(CreateApplicationDto) {
     @ApiProperty({ example: '1' })
     @IsString()
     @IsNotEmpty()
-    id?: string;
+    id?: number;
 }

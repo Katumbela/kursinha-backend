@@ -8,7 +8,7 @@ export class BaseService<T> {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly modelName: string,
-  ) {}
+  ) { }
 
   async create(data: T): Promise<T> {
     return this.prismaService[this.modelName].create({ data });

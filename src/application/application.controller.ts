@@ -17,7 +17,7 @@ export class ApplicationController {
     @ApiResponse({ status: 400, description: 'Dados inválidos' })
     async create(@Body() createApplicationDto: CreateApplicationDto) {
         const data = {
-            ...createApplicationDto, 
+            ...createApplicationDto,
             date: new Date(),
         }
         return this.applicationService.create(data);
@@ -34,7 +34,7 @@ export class ApplicationController {
     @ApiOperation({ summary: 'Obter uma inscrição pelo ID' })
     @ApiResponse({ status: 200, description: 'Inscrição obtida com sucesso' })
     @ApiResponse({ status: 404, description: 'Inscrição não encontrada' })
-    async findOne(@Param('id') id: number) {
+    async findOne(@Param('id') id: string) {
         return this.applicationService.findOne({ id: Number(id) });
     }
 
