@@ -7,9 +7,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { BaseService } from '../common/services/base.service';
-import { StudentEntity } from './entity/student.entity';
+import { StudentEntity } from './entity/client.entity';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDTO, ChangePasswordDto } from './dto/student.dto';
+import { AuthDTO, ChangePasswordDto } from './dto/client.dto';
 import { EmailService } from '../utils/email-sender.services';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../common/services/prisma.service';
@@ -21,7 +21,7 @@ export class StudentService extends BaseService<StudentEntity> {
     private readonly emailService: EmailService,
     private readonly jwtService: JwtService,
   ) {
-    super(prisma, 'student');
+    super(prisma, 'client');
   }
 
   async authenticate(

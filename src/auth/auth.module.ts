@@ -4,7 +4,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { StudentService } from '../client/student.service';
 import { PrismaService } from '../common/services/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
-import { StudentModule } from '../client/student.module';
+import { StudentModule } from '../client/client.module';
 import { EmailService } from '../utils/email-sender.services';
 
 @Module({

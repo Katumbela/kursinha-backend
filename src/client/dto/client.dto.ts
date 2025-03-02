@@ -3,8 +3,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateStudentDto {
-  
+export class CreateClientDto {
+
 
   @IsNotEmpty()
   @IsString()
@@ -70,4 +70,4 @@ export class ChangePasswordDto {
   newPassword: string;
 }
 
-export class UpdateStudentDto extends PartialType(CreateStudentDto) {}
+export class UpdateClientDto extends PartialType(CreateClientDto) { }

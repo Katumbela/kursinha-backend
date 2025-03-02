@@ -11,22 +11,22 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { StudentService } from './student.service';
+import { StudentService } from './client.service';
 import {
   AuthDTO,
   ChangePasswordDto,
-  CreateStudentDto,
+  CreateClientDto,
   RequestPasswordResetDto,
   ResetPasswordDto,
-  UpdateStudentDto,
-} from './dto/student.dto';
+  UpdateClientDto,
+} from './dto/client.dto';
 
 @Controller('api/clients')
 export class StudentController {
-  constructor(private readonly clientService: StudentService) {}
+  constructor(private readonly clientService: StudentService) { }
 
   @Post()
-  create(@Body() createClientDto: CreateStudentDto) {
+  create(@Body() createClientDto: CreateClientDto) {
     return this.clientService.create(createClientDto);
   }
 
@@ -46,7 +46,7 @@ export class StudentController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateClientDto: UpdateStudentDto) {
+  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update({ id }, updateClientDto);
   }
 
