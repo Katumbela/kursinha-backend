@@ -7,7 +7,7 @@ const frontBaseUrl = 'http://localhost:3000',
   MAIL_USER = 'ja3328173@gmail.com',
   MAIL_PASSWORD = 'vamr dmav gkqq ticz',
   MAIL_FROM_NAME = 'Reputacao 360',
-  JWT_SECRET = 'hakyoff@2024.';
+  JWT_SECRET = 'kursinha@2024.';
 
 export const env = {
   frontBaseUrl,

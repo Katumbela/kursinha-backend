@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "mongodb"
     url      = env("DATABASE_URL")
 }
 
 model Client {
-    id            Int             @id @default(autoincrement())
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
     name          String
     email         String          @unique
     password      String
@@ -33,20 +33,22 @@ enum Role {
 }
 
 model Product {
-    id          Int           @id @default(autoincrement())
+    id          String        @id @default(auto()) @map("_id") @db.ObjectId
     name        String
     category    String
     description String?
     type        ProductType
-    price       Float
+    price       String?
     mediaUrl    String? // Vídeos ou imagens
     fileUrl     String? // Link para infoproduto digital
     status      ProductStatus @default(ACTIVE)
-    clientId    Int
+    clientId    String
     client      Client        @relation(fields: [clientId], references: [id])
     sales       Sale[]
     affiliates  Affiliate[]
     coproducers Coproducer[]
+    affiliable  Boolean       @default(false)
+    commission  String?
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
 }
@@ -64,14 +66,14 @@ enum ProductStatus {
 }
 
 model Sale {
-    id        Int        @id @default(autoincrement())
-    clientId  Int
+    id        String     @id @default(auto()) @map("_id") @db.ObjectId
+    clientId  String
     client    Client     @relation(fields: [clientId], references: [id])
-    productId Int
+    productId String
     product   Product    @relation(fields: [productId], references: [id])
     amount    Float
     status    SaleStatus @default(PENDING)
-    paymentId Int?
+    paymentId String?
     payment   Payment?
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
@@ -84,8 +86,8 @@ enum SaleStatus {
 }
 
 model Payment {
-    id            Int           @id @default(autoincrement())
-    saleId        Int           @unique
+    id            String        @id @default(auto()) @map("_id") @db.ObjectId
+    saleId        String        @unique
     sale          Sale          @relation(fields: [saleId], references: [id])
     method        PaymentMethod
     transactionId String? // ID da transação do gateway de pagamento
@@ -108,15 +110,14 @@ enum PaymentStatus {
 }
 
 model Affiliate {
-    id         Int             @id @default(autoincrement())
-    clientId   Int
-    client     Client          @relation(fields: [clientId], references: [id])
-    productId  Int
-    product    Product         @relation(fields: [productId], references: [id])
-    commission Float // Comissão do afiliado (%)
-    status     AffiliateStatus @default(PENDING)
-    createdAt  DateTime        @default(now())
-    updatedAt  DateTime        @updatedAt
+    id        String          @id @default(auto()) @map("_id") @db.ObjectId
+    clientId  String
+    client    Client          @relation(fields: [clientId], references: [id])
+    productId String
+    product   Product         @relation(fields: [productId], references: [id])
+    status    AffiliateStatus @default(PENDING)
+    createdAt DateTime        @default(now())
+    updatedAt DateTime        @updatedAt
 }
 
 enum AffiliateStatus {
@@ -126,10 +127,10 @@ enum AffiliateStatus {
 }
 
 model Coproducer {
-    id           Int      @id @default(autoincrement())
-    clientId     Int
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    clientId     String
     client       Client   @relation(fields: [clientId], references: [id])
-    productId    Int
+    productId    String
     product      Product  @relation(fields: [productId], references: [id])
     revenueShare Float // Percentual da receita compartilhada
     createdAt    DateTime @default(now())
@@ -137,8 +138,8 @@ model Coproducer {
 }
 
 model Notification {
-    id        Int              @id @default(autoincrement())
-    clientId  Int
+    id        String           @id @default(auto()) @map("_id") @db.ObjectId
+    clientId  String
     client    Client           @relation(fields: [clientId], references: [id])
     message   String
     type      NotificationType
@@ -154,8 +155,8 @@ enum NotificationType {
 }
 
 model SupportTicket {
-    id        Int          @id @default(autoincrement())
-    clientId  Int
+    id        String       @id @default(auto()) @map("_id") @db.ObjectId
+    clientId  String
     client    Client       @relation(fields: [clientId], references: [id])
     subject   String
     message   String

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -49,8 +49,10 @@ export class BaseService<T> {
   }
 
   async delete(where: Partial<T>): Promise<T> {
-    return this.prismaService[this.modelName].delete({
-      where,
-    });
+    const record = await this.prismaService[this.modelName].findUnique({ where });
+    if (!record) {
+      throw new NotFoundException('Record to delete does not exist');
+    }
+    return this.prismaService[this.modelName].delete({ where });
   }
 }

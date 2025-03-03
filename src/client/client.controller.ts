@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ClientService } from './client.service';
@@ -22,6 +23,7 @@ import {
   ResetPasswordDto,
   UpdateClientDto,
 } from './dto/client.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('api/clients')
 export class ClientController {
@@ -29,7 +31,7 @@ export class ClientController {
 
   @Post()
   create(@Body() createClientDto: CreateClientDto) {
-    return this.clientService.create(createClientDto);
+    return this.clientService.createClient(createClientDto);
   }
 
   @Post('login')
@@ -38,23 +40,24 @@ export class ClientController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   findAll() {
     return this.clientService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientService.findOne({ id });
+    return this.clientService.findOne({ id: Number(id) });
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientService.update({ id }, updateClientDto);
+    return this.clientService.update({ id: Number(id) }, updateClientDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.clientService.delete({ id });
+    return this.clientService.delete({ id: Number(id) });
   }
 
   @Post('/password-reset-request')

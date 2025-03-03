@@ -69,5 +69,5 @@ export class ChangePasswordDto {
 export class UpdateClientDto extends PartialType(CreateClientDto) {
   @IsOptional()
   @IsString()
-  id?: string;
+  id?: number;
 }

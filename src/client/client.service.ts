@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
@@ -14,6 +15,7 @@ import { EmailService } from '../utils/email-sender.services';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../common/services/prisma.service';
 import { Response } from 'express';
+import { env } from '../config/env';
 
 @Injectable()
 export class ClientService extends BaseService<UpdateClientDto> {
@@ -28,37 +30,53 @@ export class ClientService extends BaseService<UpdateClientDto> {
   async createClient(createClientDto: CreateClientDto): Promise<ClientEntity> {
     const hashedPassword = await bcrypt.hash(createClientDto.password, 10);
     const clientData = { ...createClientDto, password: hashedPassword };
-    return this.prisma.client.create({ data: clientData });
+    const newClient = await this.prisma.client.create({ data: clientData });
+
+    // Send welcome email
+    await this.emailService.sendWelcomeEmail(newClient.email, newClient.name);
+
+    return newClient;
   }
 
-  async authenticate(
-    authDatas: AuthDTO,
-    res: Response,
-  ): Promise<{ user: UpdateClientDto }> {
-    const email = authDatas.email;
+  async authenticate(authDatas: AuthDTO, res: Response): Promise<any> {
+    try {
+      const email = authDatas.email;
+      const user = await this.findOne({ email });
 
-    const user = await this.findOne({ email: email });
+      if (!user || !(await bcrypt.compare(authDatas.password, user.password))) {
+        return res.status(401).json({ message: 'Credenciais inválidas' });
+      }
 
-    if (!user || !(await bcrypt.compare(authDatas.password, user.password))) {
-      throw new UnauthorizedException('Credenciais inválidas');
+      const payload = { email: user.email, sub: user.id, role: user.role };
+      const token = this.jwtService.sign(payload, {
+        secret: env.JWT_SECRET,
+      });
+
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 3600000, // 1 hora
+      });
+
+      const { password, ...userWithoutPassword } = user;
+
+      // ✅ Garante que a resposta só será enviada uma vez
+      if (!res.headersSent) {
+        return res.status(200).json({ user: userWithoutPassword });
+      }
+    } catch (error) {
+      console.error('Erro no login:', error);
+
+      // ✅ Evita enviar duas respostas
+      if (!res.headersSent) {
+        return res.status(500).json({ message: 'Erro interno no servidor' });
+      }
     }
-
-    const payload = { email: user.email, sub: user.id, role: user.role };
-    const token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-    });
-
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600000, // 1 hour
-    });
-
-    return { user };
   }
+
 
   async requestPasswordReset(email: string) {
-    console.log(email);
 
     const client = await this.findOne({ email });
 
@@ -68,7 +86,7 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
     const token = this.jwtService.sign(
       { email },
-      { expiresIn: '30m', secret: process.env.JWT_SECRET },
+      { expiresIn: '30m', secret: env.JWT_SECRET },
     );
     try {
       await this.emailService.sendPasswordResetEmail(email, token);
@@ -110,7 +128,7 @@ export class ClientService extends BaseService<UpdateClientDto> {
       throw new UnauthorizedException('Token inválido ou expirado');
     }
 
-    const client = await this.findOne({ id });
+    const client = await this.findOne({ id: Number(id) });
     if (!client) {
       throw new UnauthorizedException('Cliente não encontrado');
     }
@@ -124,7 +142,7 @@ export class ClientService extends BaseService<UpdateClientDto> {
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    await this.update({ id }, { password: hashedNewPassword });
+    await this.update({ id: Number(id) }, { password: hashedNewPassword });
 
     return { message: 'Senha alterada com sucesso' };
   }

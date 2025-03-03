@@ -6,7 +6,7 @@ import { env } from '../config/env';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(private readonly mailerService: MailerService) { }
 
   async sendPasswordResetEmail(email: string, token: string) {
     const resetUrl = `${env.frontBaseUrl}/password-reset/confirm?token=${token}`;
@@ -36,6 +36,17 @@ export class EmailService {
         adminName,
         inviteUrl,
         adminEmail,
+      },
+    });
+  }
+
+  async sendWelcomeEmail(email: string, userName: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Bem-vindo ao Kursinha Backend',
+      template: 'welcome',
+      context: {
+        userName,
       },
     });
   }

@@ -10,7 +10,7 @@ import { EmailService } from '../utils/email-sender.services';
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'ispsml@2024.',
+      secret: 'kursinha@2024.',
       signOptions: { expiresIn: '60m' },
     }),
     forwardRef(() => StudentModule),

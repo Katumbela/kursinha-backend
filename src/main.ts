@@ -5,10 +5,8 @@ import { TransformInterceptor } from './transform/transform.interceptor';
 import { HttpExceptionFilter } from './http/http.filter';
 import * as bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
-import * as cookieParser from 'cookie-parser';
+import { CookieParserMiddleware } from '@nest-middlewares/cookie-parser';
 dotenv.config();
-
-
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,7 +15,9 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '100mb' }));
   app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
-  app.use(cookieParser());
+  CookieParserMiddleware.configure('secret');
+  const c = new CookieParserMiddleware();
+  app.use(c.use);
 
   // Habilitar CORS para localhost, zuela.pt, zuela.vercel.app
   app.enableCors({
@@ -25,6 +25,14 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Métodos permitidos
     allowedHeaders: 'Content-Type, Authorization', // Cabeçalhos permitidos
     credentials: false, // Não envia cookies ou credenciais, mas pode ser ajustado conforme necessário
+  });
+
+  app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.url}`, req.body);
+    res.on("finish", () => {
+      console.log(`[RESPONSE] ${res.statusCode}`);
+    });
+    next();
   });
 
 
