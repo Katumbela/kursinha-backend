@@ -11,7 +11,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { StudentService } from './client.service';
+import { ClientService } from './client.service';
 import {
   AuthDTO,
   ChangePasswordDto,
@@ -22,12 +22,12 @@ import {
 } from './dto/client.dto';
 
 @Controller('api/clients')
-export class StudentController {
-  constructor(private readonly clientService: StudentService) { }
+export class ClientController {
+  constructor(private readonly clientService: ClientService) { }
 
   @Post()
   create(@Body() createClientDto: CreateClientDto) {
-    return this.clientService.create(createClientDto);
+    return this.clientService.createClient(createClientDto);
   }
 
   @Post('login')

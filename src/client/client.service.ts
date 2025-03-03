@@ -7,15 +7,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { BaseService } from '../common/services/base.service';
-import { StudentEntity } from './entity/client.entity';
+import { Client as ClientEntity } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDTO, ChangePasswordDto } from './dto/client.dto';
+import { AuthDTO, ChangePasswordDto, CreateClientDto, UpdateClientDto } from './dto/client.dto';
 import { EmailService } from '../utils/email-sender.services';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../common/services/prisma.service';
 
 @Injectable()
-export class StudentService extends BaseService<StudentEntity> {
+export class ClientService extends BaseService<UpdateClientDto> {
   constructor(
     private prisma: PrismaService,
     private readonly emailService: EmailService,
@@ -24,22 +24,28 @@ export class StudentService extends BaseService<StudentEntity> {
     super(prisma, 'client');
   }
 
+  async createClient(createClientDto: CreateClientDto): Promise<ClientEntity> {
+    const hashedPassword = await bcrypt.hash(createClientDto.password, 10);
+    const clientData = { ...createClientDto, password: hashedPassword };
+    return this.prisma.client.create({ data: clientData });
+  }
+
   async authenticate(
     authDatas: AuthDTO,
-  ): Promise<{ token: string; client: StudentEntity }> {
+  ): Promise<{ token: string; user: UpdateClientDto }> {
     const email = authDatas.email;
 
-    const client = await this.findOne({ email: email });
+    const user = await this.findOne({ email: email });
 
-    if (!client || client.password !== authDatas.password) {
+    if (!user || !(await bcrypt.compare(authDatas.password, user.password))) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
-    const payload = { email: client.email, sub: client.id, role: client.type };
+    const payload = { email: user.email, sub: user.id, role: user.role };
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
     });
-    return { token, client };
+    return { token, user };
   }
 
   async requestPasswordReset(email: string) {

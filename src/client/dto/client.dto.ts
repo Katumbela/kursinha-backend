@@ -1,26 +1,13 @@
 /* eslint-disable prettier/prettier */
 
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum } from 'class-validator';
+import { Role } from '@prisma/client';
 
 export class CreateClientDto {
-
-
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  bi: string;
-
-  @IsNotEmpty()
-  @IsString()
-  phone: string;
-
-  @IsNotEmpty()
-  @IsString()
-  city: string;
 
   @IsNotEmpty()
   @IsEmail()
@@ -31,11 +18,20 @@ export class CreateClientDto {
   password: string;
 
   @IsOptional()
-  verified?: boolean;
+  @IsString()
+  phone?: string;
 
   @IsOptional()
   @IsString()
-  type?: string;
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  bankAccount?: string;
+
+  @IsOptional()
+  @IsEnum(Role)
+  role?: Role;
 }
 
 export class AuthDTO {
@@ -70,4 +66,8 @@ export class ChangePasswordDto {
   newPassword: string;
 }
 
-export class UpdateClientDto extends PartialType(CreateClientDto) { }
+export class UpdateClientDto extends PartialType(CreateClientDto) {
+  @IsOptional()
+  @IsString()
+  id?: string;
+}

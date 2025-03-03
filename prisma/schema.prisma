@@ -3,15 +3,169 @@ generator client {
 }
 
 datasource db {
-    provider          = "mysql"
-    url               = env("DATABASE_URL")
-    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model Client {
-    id        Int      @id @default(autoincrement())
-    name      String
-    email     String   @unique
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id            Int             @id @default(autoincrement())
+    name          String
+    email         String          @unique
+    password      String
+    phone         String?
+    address       String?
+    bankAccount   String? // Conta bancária para recebimentos
+    role          Role            @default(PRODUCER)
+    products      Product[]
+    sales         Sale[]
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    Affiliate     Affiliate[]
+    Coproducer    Coproducer[]
+    Notification  Notification[]
+    SupportTicket SupportTicket[]
+}
+
+enum Role {
+    PRODUCER
+    ADMIN
+    AFFILIATE
+}
+
+model Product {
+    id          Int           @id @default(autoincrement())
+    name        String
+    category    String
+    description String?
+    type        ProductType
+    price       Float
+    mediaUrl    String? // Vídeos ou imagens
+    fileUrl     String? // Link para infoproduto digital
+    status      ProductStatus @default(ACTIVE)
+    clientId    Int
+    client      Client        @relation(fields: [clientId], references: [id])
+    sales       Sale[]
+    affiliates  Affiliate[]
+    coproducers Coproducer[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+}
+
+enum ProductType {
+    DIGITAL
+    FISICO
+    SERVICO
+    PAGAMENTO
+}
+
+enum ProductStatus {
+    ACTIVE
+    INACTIVE
+}
+
+model Sale {
+    id        Int        @id @default(autoincrement())
+    clientId  Int
+    client    Client     @relation(fields: [clientId], references: [id])
+    productId Int
+    product   Product    @relation(fields: [productId], references: [id])
+    amount    Float
+    status    SaleStatus @default(PENDING)
+    paymentId Int?
+    payment   Payment?
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+}
+
+enum SaleStatus {
+    PENDING
+    PAID
+    CANCELLED
+}
+
+model Payment {
+    id            Int           @id @default(autoincrement())
+    saleId        Int           @unique
+    sale          Sale          @relation(fields: [saleId], references: [id])
+    method        PaymentMethod
+    transactionId String? // ID da transação do gateway de pagamento
+    status        PaymentStatus @default(PENDING)
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
+}
+
+enum PaymentMethod {
+    CREDIT_CARD
+    PAYPAL
+    BANK_TRANSFER
+    CRYPTO
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+}
+
+model Affiliate {
+    id         Int             @id @default(autoincrement())
+    clientId   Int
+    client     Client          @relation(fields: [clientId], references: [id])
+    productId  Int
+    product    Product         @relation(fields: [productId], references: [id])
+    commission Float // Comissão do afiliado (%)
+    status     AffiliateStatus @default(PENDING)
+    createdAt  DateTime        @default(now())
+    updatedAt  DateTime        @updatedAt
+}
+
+enum AffiliateStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+model Coproducer {
+    id           Int      @id @default(autoincrement())
+    clientId     Int
+    client       Client   @relation(fields: [clientId], references: [id])
+    productId    Int
+    product      Product  @relation(fields: [productId], references: [id])
+    revenueShare Float // Percentual da receita compartilhada
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+}
+
+model Notification {
+    id        Int              @id @default(autoincrement())
+    clientId  Int
+    client    Client           @relation(fields: [clientId], references: [id])
+    message   String
+    type      NotificationType
+    read      Boolean          @default(false)
+    createdAt DateTime         @default(now())
+}
+
+enum NotificationType {
+    SALE
+    PAYMENT
+    AFFILIATE
+    SYSTEM
+}
+
+model SupportTicket {
+    id        Int          @id @default(autoincrement())
+    clientId  Int
+    client    Client       @relation(fields: [clientId], references: [id])
+    subject   String
+    message   String
+    status    TicketStatus @default(OPEN)
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+}
+
+enum TicketStatus {
+    OPEN
+    IN_PROGRESS
+    CLOSED
 }
