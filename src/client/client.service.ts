@@ -13,6 +13,7 @@ import { AuthDTO, ChangePasswordDto, CreateClientDto, UpdateClientDto } from './
 import { EmailService } from '../utils/email-sender.services';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../common/services/prisma.service';
+import { Response } from 'express';
 
 @Injectable()
 export class ClientService extends BaseService<UpdateClientDto> {
@@ -32,7 +33,8 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
   async authenticate(
     authDatas: AuthDTO,
-  ): Promise<{ token: string; user: UpdateClientDto }> {
+    res: Response,
+  ): Promise<{ user: UpdateClientDto }> {
     const email = authDatas.email;
 
     const user = await this.findOne({ email: email });
@@ -45,7 +47,14 @@ export class ClientService extends BaseService<UpdateClientDto> {
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
     });
-    return { token, user };
+
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000, // 1 hour
+    });
+
+    return { user };
   }
 
   async requestPasswordReset(email: string) {

@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ClientService } from './client.service';
 import {
   AuthDTO,
@@ -27,12 +29,12 @@ export class ClientController {
 
   @Post()
   create(@Body() createClientDto: CreateClientDto) {
-    return this.clientService.createClient(createClientDto);
+    return this.clientService.create(createClientDto);
   }
 
   @Post('login')
-  auth(@Body() authDatas: AuthDTO) {
-    return this.clientService.authenticate(authDatas);
+  auth(@Body() authDatas: AuthDTO, @Res() res: Response) {
+    return this.clientService.authenticate(authDatas, res);
   }
 
   @Get()

@@ -10,11 +10,11 @@ import { env } from '../config/env';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.split(' ')[1];
+    const token = request.cookies?.access_token;
 
     if (!token) {
       throw new UnauthorizedException('Token not found');

@@ -5,6 +5,7 @@ import { TransformInterceptor } from './transform/transform.interceptor';
 import { HttpExceptionFilter } from './http/http.filter';
 import * as bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
+import * as cookieParser from 'cookie-parser';
 dotenv.config();
 
 
@@ -16,6 +17,7 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '100mb' }));
   app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
+  app.use(cookieParser());
 
   // Habilitar CORS para localhost, zuela.pt, zuela.vercel.app
   app.enableCors({

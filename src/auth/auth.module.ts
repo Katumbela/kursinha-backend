@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { StudentService } from '../client/student.service';
+import { ClientService } from '../client/client.service';
 import { PrismaService } from '../common/services/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
 import { StudentModule } from '../client/client.module';
@@ -16,12 +16,12 @@ import { EmailService } from '../utils/email-sender.services';
     forwardRef(() => StudentModule),
   ],
   providers: [
-    StudentService,
+    ClientService,
     JwtStrategy,
     PrismaService,
     JwtService,
     EmailService,
   ],
-  exports: [StudentService],
+  exports: [ClientService],
 })
 export class AuthModule { }
