@@ -23,7 +23,7 @@ import {
   ResetPasswordDto,
   UpdateClientDto,
 } from './dto/client.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('api/clients')
 export class ClientController {
