@@ -104,8 +104,10 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
   async resetPassword(token: string, newPassword: string) {
     try {
+      // Explicitly verify the token and check for expiration
       const payload = this.jwtService.verify(token, {
-        secret: env.JWT_SECRET
+        secret: env.JWT_SECRET,
+        ignoreExpiration: false // Ensures expired tokens are rejected
       });
 
       const client = await this.findOne({ email: payload.email });
@@ -119,10 +121,13 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
       return { message: 'Senha redefinida com sucesso' };
     } catch (error) {
-      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token inválido ou expirado');
+      // Provide specific error messages for different token issues
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expirado. Por favor, solicite um novo link de recuperação de senha.');
+      } else if (error.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException('Token inválido. Por favor, solicite um novo link de recuperação de senha.');
       }
-      throw error;
+      throw new InternalServerErrorException('Erro ao redefinir senha: ' + error.message);
     }
   }
 
@@ -165,7 +170,10 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
   async validateResetToken(token: string): Promise<boolean> {
     try {
-      const decoded = this.jwtService.verify(token);
+      const decoded = this.jwtService.verify(token, {
+        secret: env.JWT_SECRET,
+        ignoreExpiration: false // Ensures expired tokens are rejected
+      });
       return !!decoded;
     } catch (error: any) {
       console.log(error.message);
