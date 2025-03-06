@@ -9,6 +9,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { env } from './config/env';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { ProductModule } from './product/product.module';
         from: `"KURSINHA - NO REPLY" <${env.MAIL_FROM}>`,
       },
       template: {
-        dir: './src/templates',
+        dir: path.join(__dirname, 'templates'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
