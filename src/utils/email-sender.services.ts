@@ -44,7 +44,7 @@ export class EmailService {
     await this.mailerService.sendMail({
       to: email,
       subject: 'Bem-vindo ao Kursinha Backend',
-      template: 'welcome',
+      template: 'welcome-email',
       context: {
         userName,
       },

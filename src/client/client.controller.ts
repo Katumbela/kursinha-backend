@@ -47,17 +47,17 @@ export class ClientController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientService.findOne({ id: Number(id) });
+    return this.clientService.findOne({id });
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientService.update({ id: Number(id) }, updateClientDto);
+    return this.clientService.update({id }, updateClientDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.clientService.delete({ id: Number(id) });
+    return this.clientService.delete({id });
   }
 
   @Post('/password-reset-request')
