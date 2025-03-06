@@ -103,17 +103,27 @@ export class ClientService extends BaseService<UpdateClientDto> {
   }
 
   async resetPassword(token: string, newPassword: string) {
-    const payload = this.jwtService.verify(token);
-    const client = await this.findOne({ email: payload.email });
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: env.JWT_SECRET
+      });
 
-    if (!client) {
-      throw new NotFoundException('Cliente não encontrado');
+      const client = await this.findOne({ email: payload.email });
+
+      if (!client) {
+        throw new NotFoundException('Cliente não encontrado');
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await this.update({ email: payload.email }, { password: hashedPassword });
+
+      return { message: 'Senha redefinida com sucesso' };
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token inválido ou expirado');
+      }
+      throw error;
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await this.update({ email: payload.email }, { password: hashedPassword });
-
-    return { message: 'Senha redefinida com sucesso' };
   }
 
   async changePassword(id: string, changePasswordDto: ChangePasswordDto) {
@@ -123,28 +133,34 @@ export class ClientService extends BaseService<UpdateClientDto> {
       throw new UnauthorizedException('Token não fornecido');
     }
 
-    const decoded = this.jwtService.verify(token);
-    if (!decoded) {
-      throw new UnauthorizedException('Token inválido ou expirado');
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: env.JWT_SECRET
+      });
+
+      const client = await this.findOne({ id });
+      if (!client) {
+        throw new UnauthorizedException('Cliente não encontrado');
+      }
+
+      const passwordMatch = await bcrypt.compare(
+        currentPassword,
+        client.password,
+      );
+      if (!passwordMatch) {
+        throw new UnauthorizedException('Senha atual incorreta');
+      }
+
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      await this.update({ id }, { password: hashedNewPassword });
+
+      return { message: 'Senha alterada com sucesso' };
+    } catch (error) {
+      if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token inválido ou expirado');
+      }
+      throw error;
     }
-
-    const client = await this.findOne({ id });
-    if (!client) {
-      throw new UnauthorizedException('Cliente não encontrado');
-    }
-
-    const passwordMatch = await bcrypt.compare(
-      currentPassword,
-      client.password,
-    );
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Senha atual incorreta');
-    }
-
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    await this.update({ id }, { password: hashedNewPassword });
-
-    return { message: 'Senha alterada com sucesso' };
   }
 
   async validateResetToken(token: string): Promise<boolean> {
