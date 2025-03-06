@@ -22,12 +22,14 @@ export class ProductService {
         ...productData,
         client: { connect: { id: clientId } },
       },
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
     });
   }
 
   async getProductById(id: string): Promise<Product | null> {
     return this.prisma.product.findUnique({
       where: { id },
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
     });
   }
 
@@ -39,6 +41,7 @@ export class ProductService {
     return this.prisma.product.update({
       where: { id },
       data,
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
     });
   }
 
@@ -49,16 +52,20 @@ export class ProductService {
     }
     return this.prisma.product.delete({
       where: { id },
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
     });
   }
 
   async listProducts(): Promise<Product[]> {
-    return this.prisma.product.findMany();
+    return this.prisma.product.findMany({
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
+    });
   }
 
   async getProductsByClientId(clientId: string): Promise<Product[]> {
     return this.prisma.product.findMany({
       where: { clientId: clientId },
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
     });
   }
 
@@ -69,6 +76,7 @@ export class ProductService {
         product: { connect: { id: productId } },
         status: 'PENDING',
       },
+      include: { client: true, product: true },
     });
   }
 
@@ -80,17 +88,22 @@ export class ProductService {
     return this.prisma.affiliate.update({
       where: { id: affiliateId },
       data: { status: 'APPROVED' },
+      include: { client: true, product: true },
     });
   }
 
   async rejectAffiliate(productId: string, affiliateId: string): Promise<Affiliate> {
-    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: { client: true, affiliates: true, coproducers: true, sales: true },
+    });
     if (!product) {
       throw new ForbiddenException('Product not found');
     }
     return this.prisma.affiliate.update({
       where: { id: affiliateId },
       data: { status: 'REJECTED' },
+      include: { client: true, product: true },
     });
   }
 }

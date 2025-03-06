@@ -173,8 +173,8 @@ enum TicketStatus {
 
 model UsedToken {
     id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  token     String   @unique
-  userId    String
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+    token     String   @unique
+    userId    String
+    createdAt DateTime @default(now())
+    expiresAt DateTime
 }
