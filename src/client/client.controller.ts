@@ -10,10 +10,11 @@ import {
   Patch,
   Post,
   Put,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { ClientService } from './client.service';
 import {
   AuthDTO,
@@ -39,6 +40,14 @@ export class ClientController {
     return this.clientService.authenticate(authDatas, res);
   }
 
+  @Get('me')
+  @UseGuards(AuthGuard)
+  getMe(@Req() req: Request) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return this.clientService.findOne({ id: userId });
+  }
+
   @Get()
   @UseGuards(AuthGuard)
   findAll() {
@@ -47,17 +56,17 @@ export class ClientController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientService.findOne({id });
+    return this.clientService.findOne({ id });
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientService.update({id }, updateClientDto);
+    return this.clientService.update({ id }, updateClientDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.clientService.delete({id });
+    return this.clientService.delete({ id });
   }
 
   @Post('/password-reset-request')
