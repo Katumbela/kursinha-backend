@@ -104,6 +104,15 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
   async resetPassword(token: string, newPassword: string) {
     try {
+      // Check if token has already been used
+      const usedToken = await this.prisma.usedToken.findUnique({
+        where: { token }
+      });
+
+      if (usedToken) {
+        throw new UnauthorizedException('Este token já foi utilizado. Por favor, solicite um novo link de recuperação de senha.');
+      }
+
       // Explicitly verify the token and check for expiration
       const payload = this.jwtService.verify(token, {
         secret: env.JWT_SECRET,
@@ -118,6 +127,15 @@ export class ClientService extends BaseService<UpdateClientDto> {
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       await this.update({ email: payload.email }, { password: hashedPassword });
+
+      // Mark the token as used
+      await this.prisma.usedToken.create({
+        data: {
+          token,
+          expiresAt: new Date(payload.exp * 1000), // Convert JWT exp timestamp to Date
+          userId: client.id
+        }
+      });
 
       return { message: 'Senha redefinida com sucesso' };
     } catch (error) {
