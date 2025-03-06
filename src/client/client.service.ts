@@ -128,7 +128,7 @@ export class ClientService extends BaseService<UpdateClientDto> {
       throw new UnauthorizedException('Token inválido ou expirado');
     }
 
-    const client = await this.findOne({ id: Number(id) });
+    const client = await this.findOne({ id });
     if (!client) {
       throw new UnauthorizedException('Cliente não encontrado');
     }
@@ -142,7 +142,7 @@ export class ClientService extends BaseService<UpdateClientDto> {
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    await this.update({ id: Number(id) }, { password: hashedNewPassword });
+    await this.update({ id }, { password: hashedNewPassword });
 
     return { message: 'Senha alterada com sucesso' };
   }
