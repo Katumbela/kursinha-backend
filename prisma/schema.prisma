@@ -8,32 +8,35 @@ datasource db {
 }
 
 model Client {
-    id                     String          @id @default(auto()) @map("_id") @db.ObjectId
-    name                   String
-    email                  String          @unique
-    password               String
-    phone                  String?
-    address                String?
-    bankAccount            String? // Conta bancária para recebimentos
-    role                   Role            @default(PRODUCER)
+    id                      String          @id @default(auto()) @map("_id") @db.ObjectId
+    name                    String
+    email                   String          @unique
+    password                String
+    phone                   String?
+    address                 String?
+    bankAccount             String? // Conta bancária para recebimentos
+    role                    Role            @default(PRODUCER)
     // Two-factor authentication fields
-    twoFactorEnabled       Boolean         @default(false)
-    twoFactorSecret        String?
+    twoFactorEnabled        Boolean         @default(false)
+    twoFactorSecret         String?
     // Notification preferences as JSON field
     notificationPreferences Json?
-    products               Product[]
-    sales                  Sale[]
-    createdAt              DateTime        @default(now())
-    updatedAt              DateTime        @updatedAt
-    Affiliate              Affiliate[]
-    Coproducer             Coproducer[]
-    Notification           Notification[]
-    SupportTicket          SupportTicket[]
+    products                Product[]
+    sales                   Sale[]          @relation("Sales")
+    purchases               Sale[]          @relation("Purchases")
+    affiliations            Sale[]          @relation("Affiliations")
+    withdrawals             Withdrawal[]
+    createdAt               DateTime        @default(now())
+    updatedAt               DateTime        @updatedAt
+    Affiliate               Affiliate[]
+    Coproducer              Coproducer[]
+    Notification            Notification[]
+    SupportTicket           SupportTicket[]
 }
 
 enum Role {
     PRODUCER
-    COPRODUCER  // Parceiro de negócios
+    COPRODUCER // Parceiro de negócios
     ADMIN
     AFFILIATE
 }
@@ -72,23 +75,58 @@ enum ProductStatus {
 }
 
 model Sale {
-    id        String     @id @default(auto()) @map("_id") @db.ObjectId
-    clientId  String
-    client    Client     @relation(fields: [clientId], references: [id])
-    productId String
-    product   Product    @relation(fields: [productId], references: [id])
-    amount    Float
-    status    SaleStatus @default(PENDING)
-    paymentId String?
-    payment   Payment?
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
+    id            String     @id @default(auto()) @map("_id") @db.ObjectId
+    amount        Float
+    netAmount     Float
+    status        SaleStatus @default(PENDING)
+    productId     String
+    product       Product    @relation(fields: [productId], references: [id])
+    buyerId       String
+    buyer         Client     @relation("Purchases", fields: [buyerId], references: [id])
+    sellerId      String
+    seller        Client     @relation("Sales", fields: [sellerId], references: [id])
+    affiliateId   String?
+    affiliate     Client?    @relation("Affiliations", fields: [affiliateId], references: [id])
+    commission    Float?     @default(0)
+    serviceFee    Float
+    paymentMethod String?
+    transactionId String?    @unique
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    Payment       Payment?
+
+    @@index([productId])
+    @@index([buyerId])
+    @@index([sellerId])
+    @@index([affiliateId])
 }
 
 enum SaleStatus {
     PENDING
     PAID
-    CANCELLED
+    CANCELED
+    REFUNDED
+    CHARGEBACK
+}
+
+model Withdrawal {
+    id              String           @id @default(auto()) @map("_id") @db.ObjectId
+    amount          Float
+    status          WithdrawalStatus @default(PENDING)
+    clientId        String
+    client          Client           @relation(fields: [clientId], references: [id])
+    createdAt       DateTime         @default(now())
+    processedAt     DateTime?        @updatedAt
+    rejectionReason String?
+    fees            Float            @default(0)
+
+    @@index([clientId])
+}
+
+enum WithdrawalStatus {
+    PENDING
+    PROCESSED
+    REJECTED
 }
 
 model Payment {
@@ -178,7 +216,7 @@ enum TicketStatus {
 }
 
 model UsedToken {
-    id        String       @id @default(auto()) @map("_id") @db.ObjectId
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
     token     String   @unique
     userId    String
     createdAt DateTime @default(now())

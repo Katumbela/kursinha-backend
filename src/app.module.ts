@@ -9,6 +9,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { env } from './config/env';
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import { SalesModule } from './sales/sales.module';
+import { WithdrawalsModule } from './withdrawals/withdrawals.module';
 import * as path from 'path';
 
 @Module({
@@ -35,7 +37,9 @@ import * as path from 'path';
     }),
     StudentModule,
     AuthModule,
-    ProductModule
+    ProductModule,
+    SalesModule,
+    WithdrawalsModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
