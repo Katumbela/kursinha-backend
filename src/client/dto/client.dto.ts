@@ -67,11 +67,6 @@ export class ChangePasswordDto {
 }
 
 
-export class UpdateNotificationPreferencesDto {
-  @IsNotEmpty()
-  preferences: NotificationPreferencesDto;
-}
-
 export class TwoFactorAuthDto {
   @IsString()
   code: string;
@@ -122,4 +117,11 @@ export class EnableTwoFactorAuthDto {
 
   @IsString()
   code: string;
+}
+
+
+
+export class UpdateNotificationPreferencesDto {
+  @IsNotEmpty()
+  preferences: NotificationPreferencesDto;
 }
