@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { WithdrawalStatus } from '@prisma/client';
 
 export class CreateWithdrawalDto {
@@ -9,7 +9,7 @@ export class CreateWithdrawalDto {
     @Min(0)
     amount: number;
 
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     clientId: string;
 }

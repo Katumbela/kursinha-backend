@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { SaleStatus } from '@prisma/client';
 
 export class CreateSaleDto {
@@ -9,19 +9,19 @@ export class CreateSaleDto {
     @Min(0)
     amount: number;
 
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     productId: string;
 
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     buyerId: string;
 
-    @IsUUID()
+    @IsString()
     @IsNotEmpty()
     sellerId: string;
 
-    @IsUUID()
+    @IsString()
     @IsOptional()
     affiliateId?: string;
 

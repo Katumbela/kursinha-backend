@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
 import { SalesModule } from './sales/sales.module';
 import { WithdrawalsModule } from './withdrawals/withdrawals.module';
+import { FinancialModule } from './financial/financial.module';
 import * as path from 'path';
 
 @Module({
@@ -39,7 +40,8 @@ import * as path from 'path';
     AuthModule,
     ProductModule,
     SalesModule,
-    WithdrawalsModule
+    WithdrawalsModule,
+    FinancialModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

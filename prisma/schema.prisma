@@ -14,7 +14,8 @@ model Client {
     password                String
     phone                   String?
     address                 String?
-    bankAccount             String? // Conta bancária para recebimentos
+    bankAccount             String? // Legacy field - can be kept for backward compatibility
+    bankAccounts            BankAccount[]   // New relation to multiple bank accounts
     role                    Role            @default(PRODUCER)
     // Two-factor authentication fields
     twoFactorEnabled        Boolean         @default(false)
@@ -221,4 +222,20 @@ model UsedToken {
     userId    String
     createdAt DateTime @default(now())
     expiresAt DateTime
+}
+
+// New model for bank accounts
+model BankAccount {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    clientId     String   @db.ObjectId
+    client       Client   @relation(fields: [clientId], references: [id])
+    bankName     String
+    accountName  String
+    accountNumber String 
+    accountType  String
+    isDefault    Boolean  @default(false)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    @@index([clientId])
 }
