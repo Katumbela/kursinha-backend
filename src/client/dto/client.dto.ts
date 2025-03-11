@@ -66,6 +66,16 @@ export class ChangePasswordDto {
   newPassword: string;
 }
 
+
+export class UpdateNotificationPreferencesDto {
+  @IsNotEmpty()
+  preferences: NotificationPreferencesDto;
+}
+
+export class TwoFactorAuthDto {
+  @IsString()
+  code: string;
+}
 export class UpdateClientDto extends PartialType(CreateClientDto) {
   @IsOptional()
   @IsString()
@@ -105,15 +115,6 @@ export class NotificationPreferencesDto {
   emailNotifications?: boolean;
 }
 
-export class UpdateNotificationPreferencesDto {
-  @IsNotEmpty()
-  preferences: NotificationPreferencesDto;
-}
-
-export class TwoFactorAuthDto {
-  @IsString()
-  code: string;
-}
 
 export class EnableTwoFactorAuthDto {
   @IsString()
