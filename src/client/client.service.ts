@@ -15,7 +15,6 @@ import {
   ChangePasswordDto,
   CreateClientDto,
   EnableTwoFactorAuthDto,
-  NotificationPreferencesDto,
   TwoFactorAuthDto,
   UpdateClientDto
 } from './dto/client.dto';
@@ -26,6 +25,7 @@ import { Response } from 'express';
 import { env } from '../config/env';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
+import { NotificationPreferencesDto } from './dto/notifiction-preferences.dto';
 
 @Injectable()
 export class ClientService extends BaseService<UpdateClientDto> {

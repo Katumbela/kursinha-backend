@@ -3,6 +3,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum, IsBoolean } from 'class-validator';
 import { Role } from '@prisma/client';
+import { NotificationPreferencesDto } from './notifiction-preferences.dto';
 
 export class CreateClientDto {
   @IsNotEmpty()
@@ -86,28 +87,6 @@ export class UpdateClientDto extends PartialType(CreateClientDto) {
   @IsOptional()
   @IsString()
   twoFactorSecret?: string;
-}
-
-export class NotificationPreferencesDto {
-  @IsOptional()
-  @IsBoolean()
-  newSales?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  paymentStatus?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  withdrawals?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  memberships?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  emailNotifications?: boolean;
 }
 
 
