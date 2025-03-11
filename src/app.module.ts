@@ -13,6 +13,7 @@ import { SalesModule } from './sales/sales.module';
 import { WithdrawalsModule } from './withdrawals/withdrawals.module';
 import { FinancialModule } from './financial/financial.module';
 import * as path from 'path';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import * as path from 'path';
     FinancialModule
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, JwtService],
   exports: [PrismaService],
 })
 export class AppModule { }
