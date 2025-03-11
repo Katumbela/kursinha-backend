@@ -10,4 +10,13 @@ export class StudentEntity {
   password: string;
   verified?: boolean;
   type?: string;
+  twoFactorEnabled?: boolean;
+  twoFactorSecret?: string;
+  notificationPreferences?: {
+    newSales: boolean;
+    paymentStatus: boolean;
+    withdrawals: boolean;
+    memberships: boolean;
+    emailNotifications: boolean;
+  };
 }

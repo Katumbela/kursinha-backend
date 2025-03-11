@@ -20,9 +20,12 @@ import {
   AuthDTO,
   ChangePasswordDto,
   CreateClientDto,
+  EnableTwoFactorAuthDto,
   RequestPasswordResetDto,
   ResetPasswordDto,
+  TwoFactorAuthDto,
   UpdateClientDto,
+  UpdateNotificationPreferencesDto,
 } from './dto/client.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -87,12 +90,11 @@ export class ClientController {
   }
 
   @Patch('/change-password/:id')
+  @UseGuards(AuthGuard)
   async changePassword(
     @Param('id') id: string,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    console.log(changePasswordDto);
-    console.log(id);
     return await this.clientService.changePassword(id, changePasswordDto);
   }
 
@@ -104,5 +106,60 @@ export class ClientController {
     } else {
       throw new BadRequestException('Token inválido ou expirado');
     }
+  }
+
+  // New endpoints for account management
+  @Get('2fa/generate')
+  @UseGuards(AuthGuard)
+  async generateTwoFactorSecret(@Req() req: Request) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.generateTwoFactorSecret(userId);
+  }
+
+  @Post('2fa/enable')
+  @UseGuards(AuthGuard)
+  async enableTwoFactorAuth(@Req() req: Request, @Body() enableTwoFactorAuthDto: EnableTwoFactorAuthDto) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.enableTwoFactorAuth(userId, enableTwoFactorAuthDto);
+  }
+
+  @Post('2fa/disable')
+  @UseGuards(AuthGuard)
+  async disableTwoFactorAuth(@Req() req: Request, @Body() twoFactorAuthDto: TwoFactorAuthDto) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.disableTwoFactorAuth(userId, twoFactorAuthDto);
+  }
+
+  @Post('2fa/validate')
+  @UseGuards(AuthGuard)
+  async validateTwoFactorAuth(@Req() req: Request, @Body() twoFactorAuthDto: TwoFactorAuthDto) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.validateTwoFactorAuth(userId, twoFactorAuthDto);
+  }
+
+  @Get('notification-preferences')
+  @UseGuards(AuthGuard)
+  async getNotificationPreferences(@Req() req: Request) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.getNotificationPreferences(userId);
+  }
+
+  @Put('notification-preferences')
+  @UseGuards(AuthGuard)
+  async updateNotificationPreferences(
+    @Req() req: Request,
+    @Body() updateNotificationPreferencesDto: UpdateNotificationPreferencesDto
+  ) {
+    const re: any = req['user'];
+    const userId = re.sub as string;
+    return await this.clientService.updateNotificationPreferences(
+      userId,
+      updateNotificationPreferencesDto.preferences
+    );
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 import { PartialType } from '@nestjs/mapped-types';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum, IsBoolean } from 'class-validator';
 import { Role } from '@prisma/client';
 
 export class CreateClientDto {
@@ -70,4 +70,55 @@ export class UpdateClientDto extends PartialType(CreateClientDto) {
   @IsOptional()
   @IsString()
   id?: string;
+
+  @IsOptional()
+  notificationPreferences?: NotificationPreferencesDto;
+
+  @IsOptional()
+  @IsBoolean()
+  twoFactorEnabled?: boolean;
+
+  @IsOptional()
+  @IsString()
+  twoFactorSecret?: string;
+}
+
+export class NotificationPreferencesDto {
+  @IsOptional()
+  @IsBoolean()
+  newSales?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  paymentStatus?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  withdrawals?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  memberships?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  emailNotifications?: boolean;
+}
+
+export class UpdateNotificationPreferencesDto {
+  @IsNotEmpty()
+  preferences: NotificationPreferencesDto;
+}
+
+export class TwoFactorAuthDto {
+  @IsString()
+  code: string;
+}
+
+export class EnableTwoFactorAuthDto {
+  @IsString()
+  secret: string;
+
+  @IsString()
+  code: string;
 }

@@ -8,26 +8,32 @@ datasource db {
 }
 
 model Client {
-    id            String          @id @default(auto()) @map("_id") @db.ObjectId
-    name          String
-    email         String          @unique
-    password      String
-    phone         String?
-    address       String?
-    bankAccount   String? // Conta bancária para recebimentos
-    role          Role            @default(PRODUCER)
-    products      Product[]
-    sales         Sale[]
-    createdAt     DateTime        @default(now())
-    updatedAt     DateTime        @updatedAt
-    Affiliate     Affiliate[]
-    Coproducer    Coproducer[]
-    Notification  Notification[]
-    SupportTicket SupportTicket[]
+    id                     String          @id @default(auto()) @map("_id") @db.ObjectId
+    name                   String
+    email                  String          @unique
+    password               String
+    phone                  String?
+    address                String?
+    bankAccount            String? // Conta bancária para recebimentos
+    role                   Role            @default(PRODUCER)
+    // Two-factor authentication fields
+    twoFactorEnabled       Boolean         @default(false)
+    twoFactorSecret        String?
+    // Notification preferences as JSON field
+    notificationPreferences Json?
+    products               Product[]
+    sales                  Sale[]
+    createdAt              DateTime        @default(now())
+    updatedAt              DateTime        @updatedAt
+    Affiliate              Affiliate[]
+    Coproducer             Coproducer[]
+    Notification           Notification[]
+    SupportTicket          SupportTicket[]
 }
 
 enum Role {
     PRODUCER
+    COPRODUCER  // Parceiro de negócios
     ADMIN
     AFFILIATE
 }

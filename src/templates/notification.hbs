@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificação - Kursinha</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .content {
+            padding: 20px 0;
+        }
+
+        .notification {
+            background-color: #f5f8ff;
+            border-left: 4px solid #4285F4;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #4285F4;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            color: #888888;
+            font-size: 12px;
+        }
+
+        .details {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .details p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Kursinha</h2>
+        </div>
+
+        <div class="content">
+            <h2>Olá, {{userName}}!</h2>
+
+            <div class="notification">
+                <p>{{message}}</p>
+
+                {{#if details}}
+                <div class="details">
+                    <h3>Detalhes:</h3>
+                    {{#if details.value}}
+                    <p><strong>Valor:</strong> {{details.value}}</p>
+                    {{/if}}
+
+                    {{#if details.status}}
+                    <p><strong>Status:</strong> {{details.status}}</p>
+                    {{/if}}
+
+                    {{#if details.type}}
+                    <p><strong>Tipo:</strong> {{details.type}}</p>
+                    {{/if}}
+
+                    {{#if details.date}}
+                    <p><strong>Data:</strong> {{details.date}}</p>
+                    {{/if}}
+
+                    {{#if details.additionalInfo}}
+                    <p><strong>Informações adicionais:</strong> {{details.additionalInfo}}</p>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+
+            <p>Para mais detalhes, acesse sua conta:</p>
+            <a href="{{actionUrl}}" class="btn">Acessar Dashboard</a>
+        </div>
+
+        <div class="footer">
+            <p>© {{currentYear}} Kursinha. Todos os direitos reservados.</p>
+            <p>Esta é uma notificação automática, por favor não responda a este e-mail.</p>
+        </div>
+    </div>
+</body>
+
+</html>
